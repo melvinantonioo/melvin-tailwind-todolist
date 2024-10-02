@@ -1,7 +1,13 @@
-import { faTrash } from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+// import { faTrash } from '@fortawesome/free-solid-svg-icons'
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import axios from 'axios'
+import { useEffect, useState } from 'react'
+import Kegiatan from './components/Kegiatan'
+import InputList from './components/InputList'
 
 function App() {
+  const [count, setCount] = useState<number>(0)
+
   const question = [
     'Create Guest Experience mobile check-in',
     'Document current CI/CD process',
@@ -11,6 +17,36 @@ function App() {
     'provide on-boarding documentation'
   ]
 
+  const [todoState, setTodoState] = useState<any[]>([])
+
+  useEffect(() => {
+    axios.get("http://localhost:2000/todos")
+      .then((response) => setTodoState(response.data))
+      .catch((error) => {
+        console.log(error);
+        alert('Gagal Mendapatkan data');
+      })
+      
+  }, [])
+
+  const hapusList = (id: number) => {
+    axios.delete(`http://localhost:2000/todos/${id}`)
+      .then(() => {
+        setTodoState(todoState.filter(todo => todo.id !== id))
+        alert("berhasil menghapus list")
+      })
+  }
+
+  const tambahList = (newList: string) => {
+    const todo = { task: newList, completed: false }
+
+    axios.post("http://localhost:2000/todos", todo)
+      .then((response) => {
+        setTodoState([...todoState, response.data])
+        alert("Berhasil Menambahkan List!")
+      })
+  }
+
 
   return (
     <div className="bg-[#1a202c] text-white">
@@ -19,55 +55,23 @@ function App() {
       <div className="text-center p-[2em]">
         <h1 className='text-xl font-bold'>Chores ToDo List</h1>
       </div>
-
-      {/* Question Box */}
-      <div className="container mx-auto text-center">
-        {question.map((q) => (
-          <div className="flex flex-row p-4">
-            <div className="basis-[10%]">
-              <input
-                type="checkbox"
-                className="w-5 h-5 border-2 border-green-500 text-green-500 rounded accent-green-500 focus:outline-none"
-              />
-            </div>
-            <div className="basis-[90%]">
-              <p>{q}</p>
-            </div>
-            <div className="basis-[10%]">
-              <button className="bg-transparent text-red-300 border border-red-300 py-1 px-2 rounded-md hover:bg-red-300 hover:text-white">
-                <FontAwesomeIcon icon={faTrash} />
-              </button>
-            </div>
-          </div>
-        ))}
-
-      </div>
+      <Kegiatan
+        todos={todoState}
+        hapusList={hapusList}
+      />
 
       {/* Underline */}
       <hr className='mt-[2em]'></hr>
 
       {/* Count */}
       <div className="text-center p-[2em]">
+        <h2>Amount List : {count}</h2>
         <h2>Done : 0</h2>
       </div>
 
-      {/* Add Todo  */}
-      <div className='container mx-auto pb-[2em]'>
-        <div>
-          <div className='p-2'>
-            <label htmlFor="">Add ToDo</label>
-          </div>
-          <div className='p-2'>
-            <input type="text" className='border rounded w-[100%] bg-transparent h-[2em]' />
-          </div>
-          <div className='p-2'>
-            <button className="bg-blue-400 text-black py-2 px-3 rounded-md">
-              Add Task
-            </button>
-          </div>
-        </div>
-      </div>
-      {/* Add Todo */}
+      <InputList
+        tambahList={tambahList}
+      />
 
     </div>
   )

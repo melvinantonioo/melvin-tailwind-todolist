@@ -1,0 +1,34 @@
+{
+  "todos": [
+    {
+      "id": "1",
+      "task": "Create Guest Experience mobile check-in",
+      "completed": false
+    },
+    {
+      "id": "2",
+      "task": "Document current CI/CD process",
+      "completed": false
+    },
+    {
+      "id": "3",
+      "task": "Perform Code Review for final Pillow-talk release",
+      "completed": false
+    },
+    {
+      "id": "4",
+      "task": "implement new color palette from design team",
+      "completed": false
+    },
+    {
+      "id": "5",
+      "task": "fix image uploading process for guest check in",
+      "completed": false
+    },
+    {
+      "id": "5",
+      "task": "provide on-boarding documentation",
+      "completed": false
+    }
+  ]
+}
